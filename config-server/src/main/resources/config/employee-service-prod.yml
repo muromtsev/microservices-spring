@@ -1,0 +1,11 @@
+example:
+  property: PROD
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/employee_prod
+    username: postgres
+    password: postgres
