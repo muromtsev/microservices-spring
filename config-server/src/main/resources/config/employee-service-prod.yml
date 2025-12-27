@@ -4,7 +4,7 @@ example:
 spring:
   config:
     activate:
-      on-profile: dev
+      on-profile: prod
   datasource:
     url: jdbc:postgresql://localhost:5432/employee_prod
     username: postgres
