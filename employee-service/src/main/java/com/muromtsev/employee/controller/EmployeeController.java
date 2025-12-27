@@ -22,31 +22,19 @@ public class EmployeeController {
 
         Employee employee = employeeService.getEmployee(employeeId, organizationId);
         return ResponseEntity.ok().body(employee);
-
     }
 
     @PutMapping
-    public ResponseEntity<String> updateEmployee(
-            @PathVariable("organizationId") String organizationId,
-            @RequestBody Employee requestEmployee) {
-        return ResponseEntity.ok(employeeService.updateEmployee(requestEmployee, organizationId));
-
+    public ResponseEntity<Employee> updateEmployee(@RequestBody Employee requestEmployee) {
+        return ResponseEntity.ok(employeeService.updateEmployee(requestEmployee));
     }
 
     @PostMapping
-    public ResponseEntity<String> createEmployee(
-            @PathVariable("organizationId") String organizationId,
-            @RequestBody Employee requestEmployee) {
-        return ResponseEntity.ok(employeeService.createEmployee(requestEmployee, organizationId));
-
+    public ResponseEntity<Employee> createEmployee(@RequestBody Employee requestEmployee) {
+        return ResponseEntity.ok(employeeService.createEmployee(requestEmployee));
     }
-
     @DeleteMapping(value = "/{employeeId}")
-    public ResponseEntity<String> deleteEmployee(
-            @PathVariable("organizationId") String organizationId,
-            @PathVariable("employeeId")  String employeeId) {
-        return ResponseEntity.ok(employeeService.deleteEmployee(employeeId, organizationId));
-
+    public ResponseEntity<String> deleteEmployee(@PathVariable("employeeId") String employeeId) {
+        return ResponseEntity.ok(employeeService.deleteEmployee(employeeId));
     }
-
 }
