@@ -1,45 +1,52 @@
 package com.muromtsev.employee.service;
 
+import com.muromtsev.employee.config.ServiceConfig;
 import com.muromtsev.employee.model.Employee;
+import com.muromtsev.employee.repository.EmployeeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
+import java.util.UUID;
 
 @Service
 public class EmployeeService {
 
+    private final EmployeeRepository employeeRepository;
+    private final ServiceConfig serviceConfig;
+
+    public EmployeeService(EmployeeRepository employeeRepository, ServiceConfig serviceConfig) {
+        this.employeeRepository = employeeRepository;
+        this.serviceConfig = serviceConfig;
+    }
+
     public Employee getEmployee(String employeeId, String organizationId) {
+        Employee employee = employeeRepository.findByOrganizationIdAndEmployeeId(organizationId, employeeId);
+        if (employee == null) {
+            throw new IllegalArgumentException("Employee with id " + employeeId + " does not exist");
+        }
+        return employee.withCommit(serviceConfig.getProperty());
+    }
+
+    public Employee createEmployee(Employee employee) {
+        employee.setEmployeeId(UUID.randomUUID().toString());
+        employeeRepository.save(employee);
+
+        return employee.withCommit(serviceConfig.getProperty());
+    }
+
+    public Employee updateEmployee(Employee employee) {
+        employeeRepository.save(employee);
+
+        return employee.withCommit(serviceConfig.getProperty());
+    }
+
+    public String deleteEmployee(String employeeId) {
+        String responseMessage = null;
         Employee employee = new Employee();
-        employee.setId(new Random().nextInt(1000));
         employee.setEmployeeId(employeeId);
-        employee.setOrganizationId(organizationId);
-        employee.setFirstName("John");
-        employee.setLastName("Doe");
-        employee.setEmployeeType("Employee");
-        return employee;
-    }
-
-    public String createEmployee(Employee employee, String organizationId) {
-        String responseMessage = null;
-        if (employee != null) {
-            employee.setOrganizationId(organizationId);
-            responseMessage = String.format("Employee created successfully: %s", employee.toString());
-        }
-        return responseMessage;
-    }
-
-    public String updateEmployee(Employee employee, String organizationId) {
-        String responseMessage = null;
-        if (employee != null) {
-            employee.setOrganizationId(organizationId);
-            responseMessage = String.format("Employee updated successfully: %s", employee.toString());
-        }
-        return responseMessage;
-    }
-
-    public String deleteEmployee(String employeeId, String organizationId) {
-        String responseMessage = null;
-        responseMessage = String.format("Employee deleted successfully: %s for organization %s", employeeId, organizationId);
+        employeeRepository.delete(employee);
+        responseMessage = String.format("Employee deleted successfully: %s", employeeId);
         return responseMessage;
     }
 

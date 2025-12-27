@@ -17,7 +17,6 @@
 	<properties>
 		<java.version>17</java.version>
         <spring-cloud.version>2025.1.0</spring-cloud.version>
-        <docker.image.prefix>ilr-stock</docker.image.prefix>
 	</properties>
     <dependencyManagement>
         <dependencies>
@@ -47,7 +46,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -84,49 +82,13 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-bootstrap</artifactId>
-        </dependency>
     </dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <layers>
-                        <enabled>true</enabled>
-                    </layers>
-                    <image>
-                        <name>${docker.image.prefix}/${project.artifactId}:latest</name>
-                    </image>
-                </configuration>
 			</plugin>
-<!--            <plugin>-->
-<!--                <groupId>com.spotify</groupId>-->
-<!--                <artifactId>dockerfile-maven-plugin</artifactId>-->
-<!--                <version>1.4.13</version>-->
-<!--                <configuration>-->
-<!--                    <repository>${docker.image.prefix}/${project.artifactId}</repository>-->
-<!--                    <tag>${project.version}</tag>-->
-<!--                    <buildArgs>-->
-<!--                        <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>-->
-<!--                    </buildArgs>-->
-<!--                </configuration>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>default</id>-->
-<!--                        <phase>install</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>build</goal>-->
-<!--                            <goal>push</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
 		</plugins>
 	</build>
-
 </project>
