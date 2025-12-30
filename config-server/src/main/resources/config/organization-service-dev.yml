@@ -1,0 +1,15 @@
+example:
+  property: DEV
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/employee_dev
+    username: postgres
+    password: postgres
+  logging:
+    level:
+      org.hibernate.SQL: DEBUG
+      org.hibernate.type: TRACE

@@ -16,6 +16,9 @@ spring:
       dialect: org.hibernate.dialect.PostgreSQLDialect
   show-sql: true
 
+server:
+  port: 8081
+
 management:
   endpoints:
     web:
@@ -35,4 +38,3 @@ eureka:
     fetchRegistry: true
     serviceUrl:
       defaultZone: http://localhost:8070/eureka
-
