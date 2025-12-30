@@ -24,6 +24,7 @@
     <modules>
         <module>config-server</module>
         <module>employee-service</module>
+        <module>organization-service</module>
     </modules>
     <build>
         <plugins>
