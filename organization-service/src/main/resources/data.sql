@@ -1,6 +1,11 @@
-INSERT INTO organization (name, contact_name, contact_email, contact_phone) VALUES
-('TechCorp Inc.', 'Иван Петров', 'ivan@techcorp.com', '+7 (999) 123-45-67'),
-('SoftDev LLC', 'Анна Сидорова', 'anna@softdev.ru', '+7 (999) 234-56-78'),
-('DataSystems', 'Сергей Иванов', 'sergey@datasys.com', '+7 (999) 345-67-89'),
-('CloudMasters', 'Мария Кузнецова', 'maria@cloudmasters.ru', '+7 (999) 456-78-90'),
-('WebSolutions', 'Алексей Смирнов', 'alex@websol.com', '+7 (999) 567-89-01');
+INSERT INTO organization (uuid, name, code, description, created_at, updated_at) VALUES
+    ('550e8400-e29b-41d4-a716-446655440000', 'Tech Innovations Inc.', 'TECH_INNOVATE', 'Технологические инновации и разработки', '2024-01-01 10:00:00', '2024-01-15 14:30:00'),
+    ('6ba7b810-9dad-11d1-80b4-00c04fd430c8', 'Global Marketing Group', 'GLOBAL_MKT', 'Маркетинговые услуги по всему миру', '2024-01-02 09:15:00', '2024-01-10 16:45:00'),
+    ('123e4567-e89b-12d3-a456-426614174000', 'Finance Solutions Ltd.', 'FIN_SOL', 'Финансовые консультации и решения', '2024-01-03 14:20:00', '2024-01-12 11:20:00'),
+    ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Healthcare Partners', 'HEALTH_PART', 'Медицинские услуги и партнерства', '2024-01-04 11:30:00', '2024-01-14 09:10:00'),
+    ('b1c7d2e3-f4a5-6789-bc0d-1e2f3a4b5c6d', 'Education First Academy', 'EDU_FIRST', 'Образовательные программы и курсы', '2024-01-05 13:45:00', '2024-01-13 15:55:00'),
+    ('f47ac10b-58cc-4372-a567-0e02b2c3d479', 'Green Energy Solutions', 'GREEN_ENERGY', 'Возобновляемые источники энергии', '2024-01-06 08:00:00', '2024-01-16 17:30:00'),
+    ('9f8e7d6c-5b4a-3210-9876-54321fedcba0', 'Logistics Express', 'LOG_EXPRESS', 'Логистика и доставка по всей стране', '2024-01-07 16:10:00', '2024-01-11 10:40:00'),
+    ('8e7d6c5b-4a3c-2b1a-0987-654321abcdef', 'Creative Design Studio', 'CREATIVE_DS', 'Дизайн и креативные решения', '2024-01-08 12:25:00', '2024-01-09 18:20:00'),
+    ('7c6b5a49-3d2e-1f0a-9876-543210abcdef', 'Real Estate Holdings', 'REAL_ESTATE', 'Недвижимость и управление имуществом', '2024-01-09 15:35:00', '2024-01-17 13:15:00'),
+    ('6d5c4b3a-2e1d-0f9e-8765-43210fedcba9', 'Food & Beverage Corp', 'FOOD_BEV', 'Производство продуктов питания и напитков', '2024-01-10 10:50:00', '2024-01-18 14:05:00');
