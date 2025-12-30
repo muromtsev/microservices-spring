@@ -1,0 +1,16 @@
+INSERT INTO employees (employee_id, first_name, last_name, organization_id, employee_type, commit) VALUES
+(1001, 'Александр', 'Васильев', '1', 'FULL_TIME', 'Senior Java Developer'),
+(1002, 'Елена', 'Морозова', '1', 'PART_TIME', 'Frontend Developer'),
+(1003, 'Дмитрий', 'Козлов', '2', 'FULL_TIME', 'DevOps Engineer'),
+(1004, 'Ольга', 'Никитина', '2', 'CONTRACTOR', 'QA Engineer'),
+(1005, 'Михаил', 'Орлов', '3', 'FULL_TIME', 'Data Scientist'),
+(1006, 'Татьяна', 'Павлова', '3', 'PART_TIME', 'Business Analyst'),
+(1007, 'Андрей', 'Семенов', '4', 'FULL_TIME', 'Cloud Architect'),
+(1008, 'Наталья', 'Федорова', '4', 'CONTRACTOR', 'Security Specialist'),
+(1009, 'Виктор', 'Белов', '5', 'FULL_TIME', 'Project Manager'),
+(1010, 'Светлана', 'Медведева', '5', 'PART_TIME', 'UI/UX Designer'),
+(1011, 'Игорь', 'Киселев', '1', 'FULL_TIME', 'Team Lead'),
+(1012, 'Юлия', 'Григорьева', '2', 'CONTRACTOR', 'Mobile Developer'),
+(1013, 'Павел', 'Титов', '3', 'FULL_TIME', 'Database Administrator'),
+(1014, 'Анжела', 'Романова', '4', 'PART_TIME', 'Scrum Master'),
+(1015, 'Роман', 'Захаров', '5', 'FULL_TIME', 'Backend Developer');

@@ -1,6 +1,6 @@
 package com.muromtsev.employee.model.dto;
 
-public record RequestOrganization(
+public record ResponseOrganization(
         String name,
         String contactName,
         String contactEmail,
