@@ -8,3 +8,19 @@ spring:
   cloud:
     config:
       fail-fast: true
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui
+    operations-sorter: method
+    try-it-out-enabled: true
+    filter: true
+  default-produces-media-type: application/json
+  default-consumes-media-type: application/json
+
+info:
+  app:
+    name: Organization Service
+    description: Microservice for organization management
+    version: 1.0.0
