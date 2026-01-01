@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📚 Документация проекта
+    url: https://github.com/muromtsev/microservices-spring/wiki
+    about: Ознакомьтесь с документацией перед созданием issue
+  - name: 💬 Вопросы и обсуждения
+    url: https://github.com/muromtsev/microservices-spring/discussions
+    about: Задавайте общие вопросы здесь
