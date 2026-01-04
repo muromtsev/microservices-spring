@@ -2,7 +2,10 @@ package com.muromtsev.employee.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.antlr.v4.runtime.misc.NotNull;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,25 +20,15 @@ public class Employee {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
-    private Integer employeeId;
     private String firstName;
     private String lastName;
-    private String organizationId;
-    private String employeeType;
-    private String commit;
+    private String email;
+    private String position;
+    private String organizationUuid;
 
-    @Transient
-    private String organizationName;
-    @Transient
-    private String contactName;
-    @Transient
-    private String contactEmail;
-    @Transient
-    private String contactPhone;
-
-    public Employee withCommit(String commit) {
-        this.setCommit(commit);
-        return this;
-    }
+    @CreationTimestamp
+    private LocalDateTime createAt;
+    @UpdateTimestamp
+    private LocalDateTime updateAt;
 
 }

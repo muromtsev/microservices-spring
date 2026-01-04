@@ -1,44 +1,89 @@
 package com.muromtsev.employee.service;
 
 import com.muromtsev.employee.config.ServiceConfig;
+import com.muromtsev.employee.exception.EmployeeNotFoundException;
 import com.muromtsev.employee.model.Employee;
+import com.muromtsev.employee.model.dto.EmployeeRequest;
+import com.muromtsev.employee.model.dto.EmployeeResponse;
 import com.muromtsev.employee.model.dto.ResponseOrganization;
+import com.muromtsev.employee.model.mapper.EmployeeMapper;
 import com.muromtsev.employee.repository.EmployeeRepository;
 import com.muromtsev.employee.service.client.OrganizationRestTemplateClient;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 
 @Slf4j
+@RequiredArgsConstructor
 @Service
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final EmployeeMapper employeeMapper;
     private final ServiceConfig serviceConfig;
     private final OrganizationRestTemplateClient organizationRestTemplateClient;
 
-    public EmployeeService(EmployeeRepository employeeRepository, ServiceConfig serviceConfig, OrganizationRestTemplateClient organizationRestTemplateClient) {
-        this.employeeRepository = employeeRepository;
-        this.serviceConfig = serviceConfig;
-        this.organizationRestTemplateClient = organizationRestTemplateClient;
+    public EmployeeResponse createEmployee(EmployeeRequest employeeRequest) {
+
+        Employee employee = new Employee();
+        employee.setCreateAt(LocalDateTime.now());
+        employee.setUpdateAt(LocalDateTime.now());
+
+        employeeMapper.toEmployee(employee, employeeRequest);
+
+        Employee savedEmployee = employeeRepository.save(employee);
+
+        log.info("Employee created successfully with id {}", savedEmployee.getId());
+
+        return employeeMapper.toEmployeeResponse(savedEmployee);
     }
 
-    public Employee getEmployee(int employeeId, int organizationId, String clientType) {
-        Employee employee = employeeRepository.findByOrganizationIdAndEmployeeId(organizationId, employeeId);
-        if (employee == null) {
-            throw new IllegalArgumentException("Employee with id " + employeeId + " does not exist");
-        }
+    public EmployeeResponse getEmployee(int employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EmployeeNotFoundException(employeeId));
 
-        ResponseOrganization org = retrieveOrganizationInfo(organizationId, clientType);
+        log.info("Employee retrieved successfully with id {}", employeeId);
 
-        if (org != null) {
-            employee.setOrganizationName(org.name());
-            employee.setContactName(org.contactName());
-            employee.setContactEmail(org.contactEmail());
-            employee.setContactPhone(org.contactPhone());
-        }
+        return employeeMapper.toEmployeeResponse(employee);
+    }
 
-        return employee.withCommit(serviceConfig.getProperty());
+    public EmployeeResponse updateEmployee(int employeeId, EmployeeRequest employeeRequest) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EmployeeNotFoundException(employeeId));
+
+        employee.setFirstName(employeeRequest.firstName());
+        employee.setLastName(employeeRequest.lastName());
+        employee.setEmail(employeeRequest.email());
+        employee.setPosition(employeeRequest.position());
+        employee.setOrganizationUuid(employeeRequest.organizationUuid());
+
+        log.info("Employee updated successfully with id {}", employeeId);
+
+        return employeeMapper.toEmployeeResponse(employeeRepository.save(employee));
+    }
+
+    public void deleteEmployee(int employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                        .orElseThrow(() -> new EmployeeNotFoundException(employeeId));
+
+        employeeRepository.delete(employee);
+
+        log.info("Employee deleted successfully with id {}", employeeId);
+    }
+
+    public List<EmployeeResponse> getAllEmployees() {
+        List<EmployeeResponse> employees = employeeRepository.findAll()
+                        .stream()
+                        .map(employeeMapper::toEmployeeResponse)
+                        .toList();
+
+        log.info("All employees retrieved successfully");
+
+        return employees;
     }
 
     private ResponseOrganization retrieveOrganizationInfo(int organizationId, String clientType) {
@@ -54,26 +99,10 @@ public class EmployeeService {
 
     }
 
-    public Employee createEmployee(Employee employee) {
-        employeeRepository.save(employee);
 
-        return employee.withCommit(serviceConfig.getProperty());
-    }
 
-    public Employee updateEmployee(Employee employee) {
-        employeeRepository.save(employee);
 
-        return employee.withCommit(serviceConfig.getProperty());
-    }
 
-    public String deleteEmployee(int employeeId) {
-        String responseMessage = null;
 
-        Employee employee = employeeRepository.getEmployeeById(employeeId);
-
-        employeeRepository.delete(employee);
-        responseMessage = String.format("Employee deleted successfully: %s", employeeId);
-        return responseMessage;
-    }
 
 }
