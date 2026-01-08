@@ -2,6 +2,7 @@ package com.muromtsev.employee.controller;
 
 import com.muromtsev.employee.model.dto.EmployeeRequest;
 import com.muromtsev.employee.model.dto.EmployeeResponse;
+import com.muromtsev.employee.model.dto.EmployeeWithOrganizationResponse;
 import com.muromtsev.employee.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -94,5 +95,13 @@ public class EmployeeController {
             })
     public void deleteEmployee(@PathVariable("employeeId") int employeeId) {
         employeeService.deleteEmployee(employeeId);
+    }
+
+    @GetMapping(value = "/{employeeId}/with-organization/{clientType}")
+    public ResponseEntity<EmployeeWithOrganizationResponse> getEmployeeWithOrganization(
+            @PathVariable("employeeId") int employeeId,
+            @PathVariable("clientType") String clientType
+    ) {
+        return ResponseEntity.ok(employeeService.getEmployeeWithOrganization(employeeId, clientType));
     }
 }
