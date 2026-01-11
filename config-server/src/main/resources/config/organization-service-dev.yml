@@ -6,7 +6,7 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:postgresql://localhost:5432/employee_dev
+    url: jdbc:postgresql://localhost:5433/organization_dev
     username: postgres
     password: postgres
   logging:

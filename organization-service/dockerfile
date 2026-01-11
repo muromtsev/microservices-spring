@@ -1,0 +1,12 @@
+FROM postgres:15-alpine
+
+ENV POSTGRES_DB=organization_dev
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=postgres
+
+EXPOSE 5433
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD pg_isready -U postgres || exit 1
+
+VOLUME /var/lib/postgresql/data
