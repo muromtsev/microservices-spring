@@ -18,14 +18,25 @@
 ```bash
 # 1. Клонируйте репозиторий
 git clone https://github.com/muromtsev/microservices-spring.git
-# 2. Поднимаем PostgreSQL БД employee_dev  
+```
+```bash
+# 2. Поднимаем БД employee_dev
+cd .\employee-service\
+docker build -t employee-postgres .
+docker run -d --name employee-db -p 5432:5432 -e POSTGRES_DB=employee_dev -e POSTGRES_USER=postgres -e  POSTGRES_PASSWORD=postgres employee-postgres
+```
+```bash
+# Поднимаем БД organization_dev
+cd .\organization-service\
+docker build -t organization-postgres .
+docker run -d --name organization-db -p 5433:5432 -e POSTGRES_DB=organization_dev -e POSTGRES_USER=postgres -e  POSTGRES_PASSWORD=postgres organization-postgres
+```
+
 # 3. Запуск сервисов:
   - config-server
   - eureka-server
   - organization-service
   - employee-service
-  
-```
 
 ## Конфигурация сервисов
 Порт и настройки по умолчанию:
