@@ -33,8 +33,10 @@ public class OrganizationRestTemplateClient implements OrganizationClient {
                     organizationUuid);
 
             if (restExchange.getStatusCode().is2xxSuccessful() &&  restExchange.getBody() != null) {
+                log.info("[Organization RestTemplate Client] Organization retrieved successfully: {}", restExchange.getStatusCode());
                 return Optional.of(employeeMapper.toOrganizationInfo(restExchange.getBody()));
             }
+            log.info("[Organization RestTemplate Client] Organization not found: {}", restExchange.getStatusCode());
             return Optional.empty();
 
         } catch (HttpClientErrorException.NotFound e) {

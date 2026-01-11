@@ -7,6 +7,7 @@ import com.muromtsev.employee.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -97,10 +98,10 @@ public class EmployeeController {
         employeeService.deleteEmployee(employeeId);
     }
 
-    @GetMapping(value = "/{employeeId}/with-organization/{clientType}")
+    @GetMapping(value = "/{employeeId}/with-organization")
     public ResponseEntity<EmployeeWithOrganizationResponse> getEmployeeWithOrganization(
             @PathVariable("employeeId") int employeeId,
-            @PathVariable("clientType") String clientType
+            @RequestParam(value = "clientType", required = false) String clientType
     ) {
         return ResponseEntity.ok(employeeService.getEmployeeWithOrganization(employeeId, clientType));
     }

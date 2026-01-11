@@ -1,6 +1,5 @@
 package com.muromtsev.employee.service;
 
-import com.muromtsev.employee.config.ServiceConfig;
 import com.muromtsev.employee.exception.EmployeeNotFoundException;
 import com.muromtsev.employee.exception.OrganizationNotFoundException;
 import com.muromtsev.employee.model.Employee;
@@ -8,8 +7,10 @@ import com.muromtsev.employee.model.OrganizationInfo;
 import com.muromtsev.employee.model.dto.EmployeeRequest;
 import com.muromtsev.employee.model.dto.EmployeeResponse;
 import com.muromtsev.employee.model.dto.EmployeeWithOrganizationResponse;
+import com.muromtsev.employee.model.dto.ResponseOrganization;
 import com.muromtsev.employee.model.mapper.EmployeeMapper;
 import com.muromtsev.employee.repository.EmployeeRepository;
+import com.muromtsev.employee.service.client.OrganizationFeignClient;
 import com.muromtsev.employee.service.client.OrganizationRestTemplateClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final EmployeeMapper employeeMapper;
     private final OrganizationRestTemplateClient organizationRestTemplateClient;
+    private final OrganizationFeignClient organizationFeignClient;
 
     public EmployeeResponse createEmployee(EmployeeRequest employeeRequest) {
 
@@ -99,21 +101,34 @@ public class EmployeeService {
         if (organizationUuid != null) {
             try {
                 Optional<OrganizationInfo> orgOptional = retrieveOrganizationInfo(organizationUuid,  clientType);
-                organizationInfo = orgOptional.orElseThrow(() -> new OrganizationNotFoundException(organizationUuid));
+
+                if (orgOptional.isPresent()) {
+                    organizationInfo = orgOptional.get();
+                } else {
+                    log.warn("Organization uuid {} not found", organizationUuid);
+                }
+
             } catch (Exception e) {
-                log.warn("Organization Not Found: {}", organizationUuid);
+                log.error("Error occurred while trying to retrieve organization uuid {}", organizationUuid, e);
             }
+        } else {
+            log.info("Employee {} has no organization assigned", employeeId);
         }
         return employeeMapper.toEmployeeWithOrganizationResponse(employeeResponse, organizationInfo);
     }
 
     private Optional<OrganizationInfo> retrieveOrganizationInfo(String organizationUuid, String clientType) {
-        return switch(clientType) {
-            case "client" ->
-                organizationRestTemplateClient.getOrganization(organizationUuid);
-            default ->
-                organizationRestTemplateClient.getOrganization(organizationUuid);
-        };
+        try {
+            if ("feign".equals(clientType)) {
+                ResponseOrganization responseOrganization = organizationFeignClient.getOrganization(organizationUuid);
+                log.info("[Organization Service Feign Client] Organization retrieved successfully with id {}", organizationUuid);
+                return Optional.ofNullable(employeeMapper.toOrganizationInfo(responseOrganization));
+            } else {
+                return organizationRestTemplateClient.getOrganization(organizationUuid);
+            }
+        } catch (Exception e) {
+            log.error("Failed to retrieve organization info for {}", organizationUuid, e);
+            return Optional.empty();
+        }
     }
-
 }
