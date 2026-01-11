@@ -6,7 +6,7 @@
 - `config-server` - Spring Cloud Config Server
 - `employee-service` - Сервис управления сотрудниками
 - `api-gateway` - API Gateway (в разработке)
-- `service-discovery` - Service Discovery (в разработке)
+- `service-discovery` - Service Discovery
 
 ## Быстрый старт
 Предварительные требования:
@@ -63,6 +63,8 @@ docker run -d --name organization-db -p 5433:5432 -e POSTGRES_DB=organization_de
 - `GET /v1/employees/{employeeId}` - получить сотрудника по ID
 - `PUT /v1/employees/{employeeId}` - обновить сотрудника
 - `DELETE /v1/employees/{employeeId}` - удалить сотрудника
+- `GET /v1/employees/{employeeId}/with-organization` - получить сотрудника вместе с организацией \[RestTemplate\]
+- `GET /v1/employees/{employeeId}/with-organization?clientType=feign` - \[FeignClient\]
 
 #### Organization Service API
 
