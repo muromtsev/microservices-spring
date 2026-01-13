@@ -1,9 +1,8 @@
-name: 🚀 Feature Request
+name: "🚀 Feature Request"
 description: Предложите новую функциональность или улучшение
 title: "[FEATURE]: "
 labels: ["enhancement", "triage"]
 assignees:
-type: bug
 body:
   - type: markdown
     attributes:
