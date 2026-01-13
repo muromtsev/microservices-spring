@@ -1,0 +1,52 @@
+name: 📋 Custom Issue
+description: Описание различных задач
+title: "[Custom]: "
+labels: ["task", "triage"]
+assignees:
+  - muromtsev
+type: custom
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Напишите задачу
+  - type: input
+    id: desc
+    attributes:
+      label: 📝 Заголовок задачи
+      description: title-description
+      placeholder: Название задачи
+    validations:
+      required: false
+  - type: textarea
+    id: task-description
+    attributes:
+      label: 📝 Описание задачи
+      description: Напишите задачу
+    validations:
+      required: true
+  - type: dropdown
+    id: task-kinds
+    attributes:
+      label: Типы задач
+      description: Выберите тип для задачи
+      options:
+        - 🔧 Рефакторинг
+        - 📚 Документация
+        - 🧪 Тестирование
+        - Прочее
+      default: 0
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Приоритет
+      description: Укажите статус значимости для фичи
+      options:
+        - 🔴 Высокий (критично для проекта)
+        - 🟡 Средний (важно, но не срочно)
+        - 🟢 Низкий (улучшение качества жизни)
+      default: 0
+    validations:
+      required: true
