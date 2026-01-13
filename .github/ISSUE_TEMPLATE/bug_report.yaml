@@ -2,7 +2,6 @@ name: "🐛 Bug Report"
 description: Подайте отчёт об ошибке.
 title: "[Bug]: "
 labels: ["bug", "triage"]
-assignees:
 body:
   - type: markdown
     attributes:
