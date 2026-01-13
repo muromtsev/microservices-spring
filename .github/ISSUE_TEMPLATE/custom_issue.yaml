@@ -1,10 +1,8 @@
-name: 📋 Custom Issue
+name: "📋 Custom Issue"
 description: Описание различных задач
 title: "[Custom]: "
 labels: ["task", "triage"]
 assignees:
-  - muromtsev
-type: custom
 body:
   - type: markdown
     attributes:
