@@ -1,7 +1,6 @@
 package com.muromtsev.employee.service;
 
 import com.muromtsev.employee.exception.EmployeeNotFoundException;
-import com.muromtsev.employee.exception.OrganizationNotFoundException;
 import com.muromtsev.employee.model.Employee;
 import com.muromtsev.employee.model.OrganizationInfo;
 import com.muromtsev.employee.model.dto.EmployeeRequest;
@@ -12,13 +11,17 @@ import com.muromtsev.employee.model.mapper.EmployeeMapper;
 import com.muromtsev.employee.repository.EmployeeRepository;
 import com.muromtsev.employee.service.client.OrganizationFeignClient;
 import com.muromtsev.employee.service.client.OrganizationRestTemplateClient;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.concurrent.TimeoutException;
 
 
 @Slf4j
@@ -129,6 +132,70 @@ public class EmployeeService {
         } catch (Exception e) {
             log.error("Failed to retrieve organization info for {}", organizationUuid, e);
             return Optional.empty();
+        }
+    }
+
+    /**
+     * Метод возвращает список сотрудников по UUID организации
+     * Использует Circuit Breaker для устойчивости к ошибкам.
+     * @param organizationUuid уникальный идентификатор организации в формате UUID
+     * @return список объектов EmployeeResponse, принадлежащих указанной организации
+     * @throws TimeoutException если превышено время ожидания
+     */
+
+    @CircuitBreaker(
+            name = "employeeService",
+            fallbackMethod = "buildFallbackEmployeeList"
+    )
+    public List<EmployeeResponse> getEmployeesByOrganizationUuid(String organizationUuid) throws TimeoutException {
+        randomlyRunLong();
+        List<EmployeeResponse> responses = new ArrayList<>();
+        List<Employee> employees = employeeRepository.getEmployeeByOrganizationUuid(organizationUuid);
+        for (Employee employee : employees) {
+            responses.add(employeeMapper.toEmployeeResponse(employee));
+        }
+        return responses;
+    }
+
+    /**
+     * Fallback метод для Circuit Breaker
+     * @param organizationUuid уникальный идентификатор организации в формате UUID
+     * @param throwable содержит информацию о том, почему сработал fallback
+     * @return список объектов EmployeeResponse, принадлежащих указанной организации
+     */
+
+    private List<EmployeeResponse> buildFallbackEmployeeList(String organizationUuid, Throwable throwable) {
+        List<EmployeeResponse> fallbackList = new ArrayList<>();
+        Employee employee = new Employee();
+        employee.setFirstName("Извините, информации о сотруднике сейчас нет.");
+        employee.setOrganizationUuid(organizationUuid);
+        fallbackList.add(employeeMapper.toEmployeeResponse(employee));
+        return fallbackList;
+    }
+
+    /**
+     * Метод с 70% шансом генерирует задержку в 5000 мс
+     * @throws TimeoutException если превышено время ожидания
+     */
+
+    private void randomlyRunLong() throws TimeoutException {
+        Random random = new Random();
+        int randomNum =  random.nextInt(10) + 1;
+        if (randomNum <= 7) sleep();
+    }
+
+    /**
+     * Метод задержки на 5000 мс
+     * @throws TimeoutException если превышено время ожидания
+     */
+
+    private void sleep() throws TimeoutException{
+        try {
+            System.out.println("SLEEPING");
+            Thread.sleep(5000);
+            throw new TimeoutException();
+        } catch (InterruptedException e) {
+            log.error(e.getMessage());
         }
     }
 }
