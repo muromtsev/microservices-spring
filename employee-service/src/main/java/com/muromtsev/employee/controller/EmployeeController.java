@@ -1,20 +1,24 @@
 package com.muromtsev.employee.controller;
 
+import com.muromtsev.employee.model.Employee;
 import com.muromtsev.employee.model.dto.EmployeeRequest;
 import com.muromtsev.employee.model.dto.EmployeeResponse;
 import com.muromtsev.employee.model.dto.EmployeeWithOrganizationResponse;
+import com.muromtsev.employee.model.mapper.EmployeeMapper;
 import com.muromtsev.employee.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 @Validated
 @RequiredArgsConstructor
@@ -24,6 +28,7 @@ import java.util.List;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+    private final EmployeeMapper employeeMapper;
 
     @PostMapping
     @Operation(
@@ -104,5 +109,28 @@ public class EmployeeController {
             @RequestParam(value = "clientType", required = false) String clientType
     ) {
         return ResponseEntity.ok(employeeService.getEmployeeWithOrganization(employeeId, clientType));
+    }
+
+    @GetMapping(value = "/organization")
+    @Operation(
+            method = "GET",
+            summary = "Получить всех сотрудников по UUID организации",
+            description = "Получает всех сотрудников по UUID организации. " +
+                    "При успешном запросе возвращает всех сотрудников определенной организации",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Сотрудники успешно найдены"),
+                    @ApiResponse(responseCode = "400", description = "Невалидные входные данные"),
+                    @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
+            })
+    public ResponseEntity<List<EmployeeResponse>> getEmployeeByOrganizationUuid(
+            @RequestParam(defaultValue = "a1b2c3d4-e5f6-7890-abcd-ef1234567890")
+                    @Parameter(
+                            description = "UUID организации",
+                            example = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                    )
+            String organizationUuid) throws TimeoutException {
+        List<EmployeeResponse> responseList = employeeService.getEmployeesByOrganizationUuid(organizationUuid);
+        return ResponseEntity.ok(responseList);
+
     }
 }

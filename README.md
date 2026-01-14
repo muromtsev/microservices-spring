@@ -4,9 +4,11 @@
 
 ## Текущая реализация
 - `config-server` - Spring Cloud Config Server
+- `eureka-server` - Service Discovery
 - `employee-service` - Сервис управления сотрудниками
+- `organization-service` - Сервис организаций
 - `api-gateway` - API Gateway (в разработке)
-- `service-discovery` - Service Discovery
+
 
 ## Быстрый старт
 Предварительные требования:
@@ -65,6 +67,7 @@ docker run -d --name organization-db -p 5433:5432 -e POSTGRES_DB=organization_de
 - `DELETE /v1/employees/{employeeId}` - удалить сотрудника
 - `GET /v1/employees/{employeeId}/with-organization` - получить сотрудника вместе с организацией \[RestTemplate\]
 - `GET /v1/employees/{employeeId}/with-organization?clientType=feign` - \[FeignClient\]
+- `GET v1/employees/organization?organizationUuid=a1b2c3d4-e5f6-7890-abcd-ef1234567890` - получает всех сотрудников заданной организации
 
 #### Organization Service API
 

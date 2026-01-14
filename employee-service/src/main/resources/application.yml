@@ -26,3 +26,23 @@ spring:
       filter: true
     default-produces-media-type: application/json
     default-consumes-media-type: application/json
+
+resilience4j:
+  .circuitbreaker:
+    instances:
+      employeeService:
+        registerHealthIndicator: true               # экспорт конфигурации в actuator/health
+        ringBufferSizeInClosedState: 5              # размер кольцевого буфера для CLOSED состояния
+        ringBufferSizeInHalfOpenState: 3            # размер кольцевого буфера для HALF_OPEN состояния
+        sliding-window-size: 10                     # размер скользящего окна
+        minimum-number-of-calls: 3                  # минимальное количество вызовов перед расчетом
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 5s             # время ожидания в разомкнутом состоянии
+        failure-rate-threshold: 50                  # порог частоты отказов в %
+        record-exceptions:                          # исключения которые должны расцениваться как сбои
+          - java.util.concurrent.TimeoutException
+          - java.io.IOException
+          - org.springframework.web.client.HttpServerErrorException
+        ignore-exceptions:
+          - com.muromtsev.employee.exception.EmployeeNotFoundException
