@@ -7,8 +7,22 @@
 - `eureka-server` - Service Discovery
 - `employee-service` - Сервис управления сотрудниками
 - `organization-service` - Сервис организаций
-- `api-gateway` - API Gateway (в разработке)
+- `gateway-server` - API Gateway 
 
+## Архитектура
+```
+    Client[Клиент] --> Gateway[API Gateway]
+    Gateway --> Eureka[Service Discovery]
+    
+    Eureka --> Employee[Employee Service]
+    Eureka --> Organization[Organization Service]
+    Eureka --> Config[Config Server]
+    
+    Employee --> DB1[(PostgreSQL = employee_dev)]
+    Organization --> DB2[(PostgreSQL = organization_dev)]
+    
+    Config --> config-server/src/main/resources/config
+```
 
 ## Быстрый старт
 Предварительные требования:
@@ -39,6 +53,7 @@ docker run -d --name organization-db -p 5433:5432 -e POSTGRES_DB=organization_de
   - eureka-server
   - organization-service
   - employee-service
+  - gateway-server
 
 ## Конфигурация сервисов
 Порт и настройки по умолчанию:
@@ -58,6 +73,19 @@ docker run -d --name organization-db -p 5433:5432 -e POSTGRES_DB=organization_de
 `prod` - production с PostgreSQL
 
 ## API Документация
+
+### Маршруты API Gateway
+Все запросы к микросервисам теперь проходят через Gateway:
+### Основные маршруты:
+- Employee Service: http://localhost:8082/api/employees/**
+- Organization Service: http://localhost:8082/api/organizations/**
+
+### Мониторинг Gateway:
+Маршруты Gateway: http://localhost:8082/actuator/gateway/routes
+Health check: http://localhost:8082/actuator/health
+Metrics: http://localhost:8082/actuator/metrics
+
+### Прямой доступ (для отладки):
 #### Employee Service API
 
 - `GET /v1/employees` - список сотрудников
